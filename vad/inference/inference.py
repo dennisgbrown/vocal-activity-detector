@@ -16,12 +16,12 @@ flags.DEFINE_string(
     "data_dir", "/home/filippo/datasets/LibriSpeech/", "path to data directory"
 )
 # DGB
-flags.DEFINE_string("data_set", 
-                    "test-clean", 
-                    "name of data set being used")  
-flags.DEFINE_string("model_name", 
-                    "test-clean", 
-                    "name of exported model to use -- assumed to be in data_dir/models/model_name/resnet1d/exported")  
+flags.DEFINE_string("data_set",
+                    "test-clean",
+                    "name of data set being used")
+flags.DEFINE_string("model_name",
+                    "test-clean",
+                    "name of exported model to use -- assumed to be in data_dir/models/model_name/resnet1d/exported")
 # flags.DEFINE_string(
 #     "exported_model",
 #     "/home/filippo/datasets/LibriSpeech/tfrecords/models/resnet1d/inference/exported/",
@@ -90,7 +90,7 @@ def main(_):
     # Always use the test-clean data set and always use the same labels
     label_dir = os.path.join(FLAGS.data_dir, "labels/test-clean/")
     # end DGB
-    
+
     _, _, test = split_data(label_dir, split="0.7/0.15", random_seed=0)
     file_it = file_iter(data_dir, label_dir, files=test)
 
@@ -116,6 +116,15 @@ def main(_):
             print("\nPrediction on file {} ...".format(fn))
             signal_input = deque(signal[: FLAGS.seq_len].tolist(), maxlen=FLAGS.seq_len)
 
+            # DGB
+            matches = 0
+            checks = 0
+            truths = np.zeros(len(signal))
+            for label in labels:
+                for i in range(int(label['start_time']), int(label['end_time'])):
+                    truths[i] = 1
+            # end DGB
+
             preds, pred_time = [], []
             pointer = FLAGS.seq_len
             while pointer < len(signal):
@@ -140,11 +149,23 @@ def main(_):
                 end = time.time()
                 dt = end - start
                 pred_time.append(dt)
-                print(
-                    "Prediction = {} | proba = {:.2f} | time = {:.2f} s".format(
-                        speech_pred, speech_prob[0], dt
-                    )
-                )
+                # DGB
+                # print(
+                #     "Prediction = {} | proba = {:.2f} | time = {:.2f} s".format(
+                #         speech_pred, speech_prob[0], dt
+                #     )
+                # )
+                # print(
+                #     "Prediction = {} | pointer = {} | proba = {:.2f} | time = {:.2f} s".format(
+                #         speech_pred, pointer, speech_prob[0], dt
+                #     )
+                # )
+                truth_mean = truths[(pointer - FLAGS.seq_len):(pointer + FLAGS.stride)].mean()
+                truth_class = classes[int(np.round(truth_mean))]
+                matches += 1 if (truth_class == speech_pred) else 0
+                checks += 1
+                # print(truth_class)
+                # end DGB
 
                 # For visualization
                 preds.append([pointer - FLAGS.seq_len, pointer, np.round(speech_prob)])
@@ -157,6 +178,9 @@ def main(_):
                 )
                 pointer += FLAGS.seq_len + FLAGS.stride
 
+            # DGB
+            print('Accuracy:', matches, '/', checks, '=', (matches/checks * 100.0), '%')
+            # end DGB
             print(
                 "Average prediction time = {:.2f} ms".format(np.mean(pred_time) * 1e3)
             )
@@ -166,7 +190,9 @@ def main(_):
                 preds = smooth_predictions(preds)
 
             # Visualization
-            visualize_predictions(signal, fn, preds)
+            # DGB
+            # visualize_predictions(signal, fn, preds)
+            # end DGB
 
 
 if __name__ == "__main__":

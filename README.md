@@ -4,8 +4,6 @@
 
 1. Pull repo https://github.com/8bitBrainProject/8BitBrainVADfg
 
-NOTE: It already has the author's exported model from the Google Drive link below in vad/model/exported/ (to the complaints of GitHub due to size). However I think that is overwritten in the "export" step below.
-
 2. Download the labels/ directory from this link and put its contents in LibriSpeech/labels: https://drive.google.com/open?id=1ZPQ6wnMhHeE7XP5dqpAEmBAryFzESlin
 
 3. Download the the test-clean dataset from https://openslr.org/12/ and put in LibriSpeech
@@ -41,10 +39,10 @@ tfrecords
 
 9. I set up these batch files in the vad folder corresponding to steps 5.1-5.4 in the original author's README:
 ```
-1 label.bat -- labels the dataset using the exported model. We probably won't use this and will just use the labels for test-clean as provided....???
+1 label.bat -- labels the dataset using the exported model. We probably won't use this and will just use the labels for test-clean as provided....???  If we do use it, need to download the exported model from the author's Google Drive linked above for the labels.
 2 record.bat -- converts raw data to .tfrecord format and puts it in LibriSpeech/tfrecords/test, train, val
-3 train.bat -- train using the tfrecords
-4a export.bat -- export the trained model [Does thsi step overwrite the exported model downloaded from his link?]
+3 train.bat -- train using the tfrecords. Puts a model into LibriSpeech/tfrecords/models/resnet1d. 
+4a export.bat -- export the trained model. By default it dumps the exported model into LibriSpeech/tfrecords/models/resnet1d
 4b test.bat -- test the model 
 ```
 

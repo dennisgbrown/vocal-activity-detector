@@ -1,0 +1,72 @@
+NOTES FOR TRYING OUT https://github.com/filippogiruzzi/voice_activity_detection
+
+From Jacob:
+
+Alright here's my list of things that I remember I had to do to actually get this thing to work.
+I've probably forgotten about some of the issues I ran into at this point, so still don't hesitate to ask if you see a problem that I didn't mention here.
+I'm gonna organize this to correspond with the steps he has written out.
+
+1. Installation
+- As mentioned, the requirements.txt has a requirement for tensorflow-gpu=1.15.4, which isn't supported by newer python versions.
+  The fix for this was using anaconda to create a new virtual environment with python=3.7. The command for this, im pretty sure, is 'conda create -n NAME python=3.7'
+
+I used the docker installation. Which means I A.) Had to download docker, and B.) had to debug the crap out of it. I dont remember why i did this painful process. I had this error:
+https://github.com/NVIDIA/nvidia-docker/issues/1034
+Which I fixed by following the steps on this page:
+https://collabnix.com/introducing-new-docker-cli-api-support-for-nvidia-gpus-under-docker-engine-19-03-0-beta-release/
+And this told me my libraries were all busted, so i had to manually install some libraries.
+
+4. Dataset
+
+You have to download the labels/ and exported/ directories from his link and put them in your project. labels/ goes in LibriSpeech/labels/ and I put the exported/ folder in vad/model/exported/
+
+Just extract the data and put it all in a big LibriSpeech/ directory at the root of the project.
+
+5. Project Usage
+
+5.1
+
+Ran into a module not found error 'vad.whatever.whatever'. I know theres a way this is supposed to work without changing the code but i couldnt be bothered. I just changed the import statements from 'vad.data_whatever.actual_file' to 'actual_file' and stuck em all in the same folder. Super hacky but it works.
+
+ The --exported_model goes to the exported/ folder you downloaded earlier, and the --out_dir goes to /labels
+
+Ran into an issue where it just says !! SIGNAL FAILED !! or something like that. I eventually just ignored it. It still worked. I dunno.
+
+5.2 & 5.3 & 5.4
+
+Just ran into some module issues again. Did the same thing. There were more issues here, but i think they were small because ive forgotten them... Hopefully at the end it should start spitting out matplotlib plots for ya.
+
+
+
+Hope thats not too big of a dump for you guys. Just putting it here for reference in case it could be helpful :slight_smile:
+
+--------------------------------------
+
+My nonsense for Windows:
+
+(0) Installed in COMP6636\Final Project\8BitBrainVADfg
+
+(0.5) Only works with Python 3.7 and I'm at 3.8. Made a Python 3.7 environment called py37. I couldn't do it in the Anaconda GUI. I think I used "conda create -n yourenvname python=x.x anaconda" as in "conda create -n py37 python=3.7 anaconda"
+
+Here's how it's used once set up:
+
+> conda info --envs 
+> activate py37
+> deactivate
+
+(1) I can't get it started because it's trying to make a folder called '../LibriSpeech/tfrecords/models/resnet1d/2021-03-06T21:15:20.742202/' which makes Windows barf due to the colons. Working on it...
+
+==> I changed datetime.now().isoformat() to datetime.now().timestamp() -- should be OK. It's training now anyway.  We'll see if the "alternate" folder name matters later...
+
+(2) Now it can't create a file -- I wonder if the path length is too long? Windows limit is 260 chars, this is 181 chars, but maybe after it expands the .. it is too long:
+
+tensorflow.python.framework.errors_impl.NotFoundError: Failed to create a NewWriteableFile: ../LibriSpeech/tfrecords/models/resnet1d/1615087524.417096/model.ckpt-500_temp_647a0cb753724ef4be86cffd7dffea69/part-00000-of-00001.data-00000-of-00001.tempstate16839720012501997113 : The system cannot find the path specified.
+fully-expanded is 257 so.... I dunno. I do know, it's 2021 and Windows still sucks.
+
+==> So... stackoverflow didn't help me but I did find that Windows has a reg key for enabling longer paths: https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation
+
+After enabling that and restarting my command line, it's running and getting past the very-long-temp-directory-name problem. 
+
+I got it to run a test on whatever it was testing. 
+
+

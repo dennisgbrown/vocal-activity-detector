@@ -86,7 +86,8 @@ def main():
 
     if not args.model_dir:
         save_dir = "{}models/{}/{}/".format(
-            args.data_dir, args.model, datetime.now().timestamp()
+            # args.data_dir, args.model, datetime.now().isoformat()
+            args.data_dir, args.model, datetime.now().timestamp()  # DGB 
         )
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)

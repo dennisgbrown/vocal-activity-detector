@@ -1,4 +1,60 @@
-# Voice Activity Detection project
+# QUICK START for Voice Activity Detection project
+
+0. Reminder: Original author's instructions are at https://github.com/filippogiruzzi/voice_activity_detection (README.md) and also copied below. 
+
+1. Pull repo https://github.com/8bitBrainProject/8BitBrainVADfg
+
+NOTE: It already has the author's exported model from the Google Drive link below in vad/model/exported/ (to the complaints of GitHub due to size). However I think that is overwritten in the "export" step below.
+
+2. Download the labels/ directory from this link and put its contents in LibriSpeech/labels: https://drive.google.com/open?id=1ZPQ6wnMhHeE7XP5dqpAEmBAryFzESlin
+
+3. Download the the test-clean dataset from https://openslr.org/12/ and put in LibriSpeech
+
+4. Download the noisy datasets (warning: 11GB) from the Dropbox and extract into LibriSpeech: https://www.dropbox.com/sh/5tmzx8gat67beyz/AABwXXSFKQKwzZV4kGPQ4dsSa/test-clean-but-actually-noisy.zip?dl=0
+
+5. Your LibriSpeech folder should have these contents:
+```
+BOOKS.TXT
+CHAPTERS.TXT
+labels
+LICENSE.TXT
+README.md
+README.TXT
+SPEAKERS.TXT
+test-clean
+test-clean-db-10
+test-clean-db-160
+test-clean-db-20
+test-clean-db-40
+test-clean-db-5
+test-clean-db-80
+test-clean-db0
+test-clean-db5
+tfrecords
+```
+
+6. Set up a Python 3.7 environment with the required packages. Notes in the "MISC INSTALL NOTES" file. 
+
+7. I modified the code to not make invalid filenames in Windows (it was putting colons in filenames using timestamp). See # DGB in training/train.py. Notes in the "MISC INSTALL NOTES" file. Hopefully I didn't break anything.
+
+8. I had to set my Windows registry to allow filenames longer than 260 chars. See https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation
+
+9. I set up these batch files in the vad folder corresponding to steps 5.1-5.4 in the original author's README:
+```
+1 label.bat -- labels the dataset using the exported model. We probably won't use this and will just use the labels for test-clean as provided....???
+2 record.bat -- converts raw data to .tfrecord format and puts it in LibriSpeech/tfrecords/test, train, val
+3 train.bat -- train using the tfrecords
+4a export.bat -- export the trained model [Does thsi step overwrite the exported model downloaded from his link?]
+4b test.bat -- test the model 
+```
+
+--> Right now, the data_dir for the steps above is read from the command line--that's the LibriSpeech directory. HOWEVER, the specific data set within LibriSpeech is hardcoded as test-clean for now.
+
+
+
+
+
+# ORIGINAL AUTHOR's README for Voice Activity Detection project
 
 Keywords: Python, TensorFlow, Deep Learning, 
 Time Series classification

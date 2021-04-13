@@ -20,7 +20,7 @@ The code performs 5 main functions:
 
     NOTE: The label data lives in LibriSpeech/labels/<data set name>.
 
-2. Convert the raw data to tfrecords. 
+2. Convert the raw data to tfrecords. This process uses the labels and is currently hardcoded to use LibriSpeech/labels/test-clean.
 
     NOTE: This data lives in LibriSpeech/tfrecords/<data set name>
 

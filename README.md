@@ -40,13 +40,13 @@ tfrecords
 9. I set up these batch files in the vad folder corresponding to steps 5.1-5.4 in the original author's README:
 ```
 1 label.bat -- labels the dataset using the exported model. We probably won't use this and will just use the labels for test-clean as provided....???  If we do use it, need to download the exported model from the author's Google Drive linked above for the labels.
-2 record.bat -- converts raw data to .tfrecord format and puts it in LibriSpeech/tfrecords/test, train, val
+2 record.bat -- converts raw data to .tfrecord format and puts it in LibriSpeech/tfrecords/test, train, val. Currently hardcoded for test-clean dataset. 
 3 train.bat -- train using the tfrecords. Puts a model into LibriSpeech/tfrecords/models/resnet1d. 
 4a export.bat -- export the trained model. By default it dumps the exported model into LibriSpeech/tfrecords/models/resnet1d
-4b test.bat -- test the model 
+4b test.bat -- test the exported model. Currently hardcoded for test-clean dataset. 
 ```
 
---> Right now, the data_dir for the steps above is read from the command line--that's the LibriSpeech directory. HOWEVER, the specific data set within LibriSpeech is hardcoded as test-clean for now.
+--> Right now, the data_dir for the steps above is read from the command line--that's the LibriSpeech directory. HOWEVER, the specific data set within LibriSpeech is hardcoded as test-clean for the tfrecords creation and inference/test for now.
 
 
 

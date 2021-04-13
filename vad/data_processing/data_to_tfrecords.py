@@ -149,7 +149,7 @@ def create_tfrecords(
         tf.gfile.MakeDirs(output_path)
 
     # Data & label directories
-    label_dir = os.path.join(data_dir, "labels/")
+    label_dir = os.path.join(data_dir, "labels/test-clean/")
     data_dir = os.path.join(data_dir, data_set + "/")
 
     # Split data on files

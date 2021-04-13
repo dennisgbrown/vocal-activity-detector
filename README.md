@@ -40,7 +40,7 @@ The code performs 5 main functions:
 
 3. Download the noisy datasets (warning: 11GB) from the Dropbox and extract into LibriSpeech: https://www.dropbox.com/sh/5tmzx8gat67beyz/AABwXXSFKQKwzZV4kGPQ4dsSa/test-clean-but-actually-noisy.zip?dl=0
 
-4. Download the labels for test-clean from this link and put its contents in LibriSpeech/labels/test-clean: https://drive.google.com/open?id=1ZPQ6wnMhHeE7XP5dqpAEmBAryFzESlin
+4. Download the labels for test-clean from this link and put it the json files into LibriSpeech/labels/test-clean: https://drive.google.com/open?id=1ZPQ6wnMhHeE7XP5dqpAEmBAryFzESlin
 
 5. Download the exported model from the same link put its "exported" folder into LibriSpeech/models/pretrainedfg (only needed if we are using it to make more labels) 
 
@@ -70,7 +70,7 @@ tfrecords
 
 8. I had to set my Windows registry to allow filenames longer than 260 chars. See https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation
 
-9. Command lines to run each step (I put batch files in the scripts folder). **Generally you only want to change the "data_set" parameter to the name of a data folder under LibriSpeech**, plus in the testing step, you can change "model_name" to a different model than the one for the given data_set to implement the second part of our experiment.
+9. Command lines to run each step (run from vad folder) (I also put batch files in the scripts folder). **Generally you only want to change the "data_set" parameter to the name of a data folder under LibriSpeech**, plus in the testing step, you can change "model_name" to a different model than the one for the given data_set to implement the second part of our experiment.
 
     - Step 1: Label: **We probably won't use this** and will just use the labels for test-clean as provided by the author.
 

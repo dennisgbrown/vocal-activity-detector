@@ -48,11 +48,13 @@ My nonsense for Windows:
 
 (0.5) Only works with Python 3.7 and I'm at 3.8. Made a Python 3.7 environment called py37. I couldn't do it in the Anaconda GUI. I think I used "conda create -n yourenvname python=x.x anaconda" as in "conda create -n py37 python=3.7 anaconda"
 
-Here's how it's used once set up:
-
 > conda info --envs 
-> activate py37
-> deactivate
+> conda create -n py37 python=3.7 anaconda
+> conda info --envs 
+> conda activate py37
+> pip install -r requirements.txt
+[do stuff]
+> conda deactivate
 
 (1) I can't get it started because it's trying to make a folder called '../LibriSpeech/tfrecords/models/resnet1d/2021-03-06T21:15:20.742202/' which makes Windows barf due to the colons. Working on it...
 

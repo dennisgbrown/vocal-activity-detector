@@ -211,6 +211,10 @@ def main():
             fake_input=args.fake_input,
         )
 
+        logger.info("Evaluation of test set ...")
+        estimator.evaluate(input_fn=test_input_fn)
+        
+        """
         classes = ["Noise", "Speech"]
         predictions = estimator.predict(input_fn=test_input_fn)
         for n, pred in enumerate(predictions):
@@ -227,7 +231,7 @@ def main():
             plt.xlabel("Time (num. points)")
             plt.ylabel("Amplitude")
             plt.show()
-
+        """
 
 if __name__ == "__main__":
     main()

@@ -117,6 +117,8 @@ def main(_):
             signal_input = deque(signal[: FLAGS.seq_len].tolist(), maxlen=FLAGS.seq_len)
 
             # DGB
+            # Create a vector the same length as the signal vector containing the
+            # label data, where at each element, 0 = no speech and 1 = speech.
             matches = 0
             checks = 0
             truths = np.zeros(len(signal))
@@ -160,6 +162,9 @@ def main(_):
                 #         speech_pred, pointer, speech_prob[0], dt
                 #     )
                 # )
+
+                # Find the mean of the label truths for the current segment of audio.
+                # Round it and compare it to the prediction. Count the matches.
                 truth_mean = truths[(pointer - FLAGS.seq_len):(pointer + FLAGS.stride)].mean()
                 truth_class = classes[int(np.round(truth_mean))]
                 matches += 1 if (truth_class == speech_pred) else 0

@@ -58,6 +58,8 @@ Here's how it's used once set up:
 
 ==> I changed datetime.now().isoformat() to datetime.now().timestamp() -- should be OK. It's training now anyway.  We'll see if the "alternate" folder name matters later...
 
+==> UPDATE: This is no longer relevant due to other changes made to the code to work with multiple data sets.
+
 (2) Now it can't create a file -- I wonder if the path length is too long? Windows limit is 260 chars, this is 181 chars, but maybe after it expands the .. it is too long:
 
 tensorflow.python.framework.errors_impl.NotFoundError: Failed to create a NewWriteableFile: ../LibriSpeech/tfrecords/models/resnet1d/1615087524.417096/model.ckpt-500_temp_647a0cb753724ef4be86cffd7dffea69/part-00000-of-00001.data-00000-of-00001.tempstate16839720012501997113 : The system cannot find the path specified.

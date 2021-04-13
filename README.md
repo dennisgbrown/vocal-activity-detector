@@ -1,21 +1,56 @@
 # QUICK START for Voice Activity Detection project
 
+## What's going on here?
+
+We took Filippo Giruzzi's VAD from https://github.com/filippogiruzzi/voice_activity_detection and modified it to work on more than just one hard-coded data set. It uses TensorFlow and is based on tf.estimator. Our modifications to the source code are bracketed with "# initials" and # end initials".
+
+We are only using the LibriSpeech "test-clean" data set from openslr, which is a set of FLAC audio files. It is split into 70% train, 15% validate, 15% test. 
+
+We are using labels provided by the author that indicate, for each audio file, where speech events start and stop.
+
+We added white noise to the test-clean dataset to create additional datasets: test-clean-db-160, test-clean-db-80, etc.
+
+NOTE: The data lives in LibriSpeech/<data set name> and is not in the GitHub repo. 
+
+First, we are training and evaluating the VAD on each dataset. Second, for each trained model created in the first step, we are evalauting it against each of the other datasets, just to see how resilient trained models are to noise levels on which they did not train. 
+
+The code performs 5 main functions:
+
+1. Label data using an exported model provided by the author. We're not doing this, but the code should still work, and has been modified to accept the dataset name as a parameter.
+
+    NOTE: The label data lives in LibriSpeech/labels/<data set name>.
+
+2. Convert the raw data to tfrecords. 
+
+    NOTE: This data lives in LibriSpeech/tfrecords/<data set name>
+
+3. Train using the tfrecords and write the raw model checkpoint data to disk.
+
+4. Export that checkpoint data to a saved model. 
+
+5. Test the saved model on audio data. 
+
+## Steps to get started
+
 0. Reminder: Original author's instructions are at https://github.com/filippogiruzzi/voice_activity_detection (README.md) and also copied below. 
 
 1. Pull repo https://github.com/8bitBrainProject/8BitBrainVADfg
 
-2. Download the labels/ directory from this link and put its contents in LibriSpeech/labels: https://drive.google.com/open?id=1ZPQ6wnMhHeE7XP5dqpAEmBAryFzESlin
+2. Download the the test-clean dataset from https://openslr.org/12/ and put in LibriSpeech as LibriSpeech/test-clean
 
-3. Download the the test-clean dataset from https://openslr.org/12/ and put in LibriSpeech
+3. Download the noisy datasets (warning: 11GB) from the Dropbox and extract into LibriSpeech: https://www.dropbox.com/sh/5tmzx8gat67beyz/AABwXXSFKQKwzZV4kGPQ4dsSa/test-clean-but-actually-noisy.zip?dl=0
 
-4. Download the noisy datasets (warning: 11GB) from the Dropbox and extract into LibriSpeech: https://www.dropbox.com/sh/5tmzx8gat67beyz/AABwXXSFKQKwzZV4kGPQ4dsSa/test-clean-but-actually-noisy.zip?dl=0
+4. Download the labels for test-clean from this link and put its contents in LibriSpeech/labels/test-clean: https://drive.google.com/open?id=1ZPQ6wnMhHeE7XP5dqpAEmBAryFzESlin
 
-5. Your LibriSpeech folder should have these contents:
+5. Download the exported model from the same link put its "exported" folder into LibriSpeech/models/pretrainedfg (only needed if we are using it to make more labels) 
+
+6. Your LibriSpeech folder should have these contents:
 ```
 BOOKS.TXT
 CHAPTERS.TXT
 labels
 LICENSE.TXT
+models
 README.md
 README.TXT
 SPEAKERS.TXT
@@ -31,23 +66,31 @@ test-clean-db5
 tfrecords
 ```
 
-6. Set up a Python 3.7 environment with the required packages. Notes in the "MISC INSTALL NOTES" file. 
-
-7. I modified the code to not make invalid filenames in Windows (it was putting colons in filenames using timestamp). See # DGB in training/train.py. Notes in the "MISC INSTALL NOTES" file. Hopefully I didn't break anything.
+7. Set up a Python 3.7 environment with the required packages. Notes in the "MISC INSTALL NOTES" file. 
 
 8. I had to set my Windows registry to allow filenames longer than 260 chars. See https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation
 
-9. I set up these batch files in the vad folder corresponding to steps 5.1-5.4 in the original author's README:
-```
-1 label.bat -- labels the dataset using the exported model. We probably won't use this and will just use the labels for test-clean as provided....???  If we do use it, need to download the exported model from the author's Google Drive linked above for the labels.
-2 record.bat -- converts raw data to .tfrecord format and puts it in LibriSpeech/tfrecords/test, train, val. Currently hardcoded for test-clean dataset. 
-3 train.bat -- train using the tfrecords. Puts a model into LibriSpeech/tfrecords/models/resnet1d. 
-4a export.bat -- export the trained model. By default it dumps the exported model into LibriSpeech/tfrecords/models/resnet1d
-4b test.bat -- test the exported model. Currently hardcoded for test-clean dataset. 
-```
+9. Command lines to run each step (I put batch files in the scripts folder). **Generally you only want to change the "data_set" parameter to the name of a data folder under LibriSpeech**, plus in the testing step, you can change "model_name" to a different model than the one for the given data_set to implement the second part of our experiment.
 
---> Right now, the data_dir for the steps above is read from the command line--that's the LibriSpeech directory. HOWEVER, the specific data set within LibriSpeech is hardcoded as test-clean for the tfrecords creation and inference/test for now.
+    - Step 1: Label: **We probably won't use this** and will just use the labels for test-clean as provided by the author.
 
+    python data_processing/librispeech_label_data.py --data_set test-clean --data_dir ../LibriSpeech/ --out_dir ../LibriSpeech/labels/ --exported_model ../LibriSpeech/models/pretrainedfg/exported     
+
+    - Step 2: Convert raw data to tfrecords. 
+    
+    python data_processing/data_to_tfrecords.py --data_set test-clean --data_dir ../LibriSpeech/
+    
+    - Step 3: Train using the tfrecords
+    
+    python training/train.py --data-set test-clean --data-dir ../LibriSpeech/
+    
+    - Step 4a: Export the trained model.
+    
+    python inference/export_model.py --data-set test-clean --model-dir ../LibriSpeech/models/
+    
+    - Step 4b: Test.
+    
+    python inference/inference.py --data_set test-clean --model_name test-clean --data_dir ../LibriSpeech/ --smoothing
 
 
 

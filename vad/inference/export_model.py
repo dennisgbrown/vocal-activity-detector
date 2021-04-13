@@ -1,6 +1,11 @@
 import argparse
 import logging
 import sys
+# DGB
+import glob
+import os
+import shutil 
+# end DGB
 
 import numpy as np
 import tensorflow as tf
@@ -16,9 +21,14 @@ def main():
     parser.add_argument(
         "--model-dir", type=str, default="", help="pretrained model directory"
     )
+    # DGB
     parser.add_argument(
-        "--ckpt", type=str, default="", help="pretrained checkpoint directory"
+        "--data-set", type=str, default="", help="name of data set"
     )
+    # DGB -- not sure this is even used? 
+    # parser.add_argument(
+    #     "--ckpt", type=str, default="", help="pretrained checkpoint directory"
+    # )
     parser.add_argument("--model", type=str, default="resnet1d", help="model name")
     parser.add_argument("--n-filters", type=str, default="32-64-128")
     parser.add_argument("--n-kernels", type=str, default="8-5-3")
@@ -38,6 +48,8 @@ def main():
     np.random.seed(0)
     tf.set_random_seed(0)
     tf.logging.set_verbosity(tf.logging.INFO)
+
+    args.model_dir = args.model_dir + args.data_set + "/" + args.model + "/" # DGB
 
     save_dir = args.model_dir
 
@@ -79,6 +91,22 @@ def main():
     )
     estimator.export_savedmodel(save_dir, raw_serving_fn, strip_default_attrs=True)
 
+    # DGB
+    # The above step creates a folder with timestamp as its name. No way
+    # to control that behavior as far as I can tell. We just want it to be called
+    # "exported" since we are not using multiple exports of the same model. 
+    # (1) If exported folder already exists, delete it. 
+    export_dir = save_dir + "exported/"
+    if os.path.exists(export_dir) and os.path.isdir(export_dir):
+        print("Deleting old folder", export_dir)
+        shutil.rmtree(export_dir)
+    # (2) Find latest folder in the save_dir. 
+    list_of_files = glob.glob(save_dir + "*") 
+    newest_folder = max(list_of_files, key=os.path.getctime)    
+    # (3) Rename it to "exported."  
+    print("Renaming", newest_folder, "to", export_dir)
+    os.rename(newest_folder, export_dir)
+    # end DGB
 
 if __name__ == "__main__":
     main()

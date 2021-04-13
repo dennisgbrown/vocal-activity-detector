@@ -23,6 +23,11 @@ def main():
         default="/home/filippo/datasets/LibriSpeech/tfrecords/",
         help="tf records data directory",
     )
+    # DGB
+    parser.add_argument(
+        "--data-set", type=str, default="", help="name of data set"
+    )
+    # end DGB
     parser.add_argument(
         "--model-dir", type=str, default="", help="pretrained model directory"
     )
@@ -74,6 +79,11 @@ def main():
     assert len(args.n_kernels.split("-")) == 3, "3 values required for --n-kernels"
     assert len(args.n_fc_units.split("-")) == 2, "2 values required --n-fc-units"
 
+    # DGB
+    potential_save_dir = args.data_dir + "models/" + args.data_set + "/" + args.model + "/"
+    args.data_dir = args.data_dir + "tfrecords/" + args.data_set  + "/"   
+    # end DGB
+
     tfrecords_train = glob.glob("{}train/*.tfrecord".format(args.data_dir))
     tfrecords_val = glob.glob("{}val/*.tfrecord".format(args.data_dir))
     tfrecords_test = glob.glob("{}test/*.tfrecord".format(args.data_dir))
@@ -85,14 +95,22 @@ def main():
     tf.logging.set_verbosity(tf.logging.INFO)
 
     if not args.model_dir:
-        save_dir = "{}models/{}/{}/".format(
-            # args.data_dir, args.model, datetime.now().isoformat()
-            args.data_dir, args.model, datetime.now().timestamp()  # DGB 
-        )
+        # DGB
+        # save_dir = "{}models/{}/{}/".format(
+        #     # args.data_dir, args.model, datetime.now().isoformat()
+        #     args.data_dir, args.model, datetime.now().timestamp()  
+        # )
+        save_dir = potential_save_dir 
+        # end DGB
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
     else:
         save_dir = args.model_dir
+
+    # DGB
+    print('data dir:', args.data_dir)  
+    print('model dir:', save_dir)   
+    # end DGB
 
     params = {
         "model": args.model,

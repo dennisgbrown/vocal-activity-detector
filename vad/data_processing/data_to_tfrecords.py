@@ -13,6 +13,11 @@ from vad.data_processing.feature_extraction import extract_features
 flags.DEFINE_string(
     "data_dir", "/home/filippo/datasets/LibriSpeech/", "data directory path"
 )
+# DGB
+flags.DEFINE_string("data_set", 
+                    "test-clean", 
+                    "name of data set being used")  
+# end DGB
 flags.DEFINE_string("data_split", "0.7/0.15", "train/val split")
 flags.DEFINE_integer("seq_len", 1024, "segment length")
 flags.DEFINE_integer("num_shards", 256, "number of tfrecord files")
@@ -125,6 +130,9 @@ def write_tfrecords(path, dataiter, num_shards=256, nmax=-1):
 
 def create_tfrecords(
     data_dir,
+    # DGB
+    data_set,  
+    # end DGB
     seq_len=1024,
     split="0.7/0.15",
     num_shards=256,
@@ -133,13 +141,16 @@ def create_tfrecords(
 ):
     np.random.seed(0)
 
-    output_path = os.path.join(data_dir, "tfrecords/")
+    # DGB
+    # output_path = os.path.join(data_dir, "tfrecords/")
+    output_path = os.path.join(data_dir, "tfrecords/" + data_set + "/") 
+    # end DGB
     if not tf.gfile.IsDirectory(output_path):
         tf.gfile.MakeDirs(output_path)
 
     # Data & label directories
     label_dir = os.path.join(data_dir, "labels/")
-    data_dir = os.path.join(data_dir, "test-clean/")
+    data_dir = os.path.join(data_dir, data_set + "/")
 
     # Split data on files
     train, val, test = split_data(label_dir, split, random_seed=0)
@@ -177,6 +188,9 @@ def create_tfrecords(
 def main(_):
     create_tfrecords(
         FLAGS.data_dir,
+        # DGB
+        FLAGS.data_set,
+        # end DGB
         seq_len=FLAGS.seq_len,
         split=FLAGS.data_split,
         num_shards=FLAGS.num_shards,

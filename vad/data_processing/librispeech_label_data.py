@@ -27,6 +27,9 @@ flags.DEFINE_string(
     "/home/filippo/datasets/vad_data/tfrecords/models/resnet1d/inference/exported/",
     "path to pretrained TensorFlow exported model",
 )
+flags.DEFINE_string("data_set", 
+                    "test-clean", 
+                    "name of data set being used")  # DGB
 flags.DEFINE_boolean("viz", False, "visualize prediction")
 FLAGS = flags.FLAGS
 
@@ -56,7 +59,7 @@ def file_iter(data_dir):
             sub_dir = os.path.join(base_dir, sub_dir_id)
             flac_files = [x for x in os.listdir(sub_dir) if "flac" in x]
             for fn in flac_files:
-                fp = os.path.join(data_dir, base_dir, sub_dir, fn)
+                fp = os.path.join(sub_dir, fn) # DGB
                 try:
                     signal, sr = sf.read(fp)
                 except RuntimeError:
@@ -67,7 +70,9 @@ def file_iter(data_dir):
 
 def main(_):
     np.random.seed(0)
-    file_it = file_iter(FLAGS.data_dir)
+    FLAGS.out_dir = FLAGS.out_dir + FLAGS.data_set + "/"  # DGB
+    # file_it = file_iter(FLAGS.data_dir)
+    file_it = file_iter(FLAGS.data_dir + "/" + FLAGS.data_set + "/")  # DGB
     if not tf.gfile.IsDirectory(FLAGS.out_dir):
         tf.gfile.MakeDirs(FLAGS.out_dir)
 

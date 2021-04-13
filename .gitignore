@@ -150,6 +150,10 @@ LibriSpeech/tfrecords/*
 !LibriSpeech/tfrecords/.placeholder
 LibriSpeech/labels/*
 !LibriSpeech/labels/.placeholder
+!LibriSpeech/labels/test-clean/.placeholder
+LibriSpeech/models/*
+!LibriSpeech/models/.placeholder
+!LibriSpeech/models/pretrainedfg/.placeholder
 LibriSpeech/test*
 LibriSpeech/train*
 

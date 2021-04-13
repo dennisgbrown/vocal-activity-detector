@@ -15,11 +15,19 @@ from vad.training.input_pipeline import FEAT_SIZE
 flags.DEFINE_string(
     "data_dir", "/home/filippo/datasets/LibriSpeech/", "path to data directory"
 )
-flags.DEFINE_string(
-    "exported_model",
-    "/home/filippo/datasets/LibriSpeech/tfrecords/models/resnet1d/inference/exported/",
-    "path to pretrained TensorFlow exported model",
-)
+# DGB
+flags.DEFINE_string("data_set", 
+                    "test-clean", 
+                    "name of data set being used")  
+flags.DEFINE_string("model_name", 
+                    "test-clean", 
+                    "name of exported model to use -- assumed to be in data_dir/models/model_name/resnet1d/exported")  
+# flags.DEFINE_string(
+#     "exported_model",
+#     "/home/filippo/datasets/LibriSpeech/tfrecords/models/resnet1d/inference/exported/",
+#     "path to pretrained TensorFlow exported model",
+# )
+# end DGB
 flags.DEFINE_integer("seq_len", 1024, "sequence length for speech prediction")
 flags.DEFINE_integer("stride", 1, "stride for sliding window prediction")
 flags.DEFINE_boolean("smoothing", False, "apply smoothing feature")
@@ -75,9 +83,14 @@ def main(_):
     np.random.seed(0)
 
     # Directories
-    data_dir = os.path.join(FLAGS.data_dir, "test-clean/")
-    label_dir = os.path.join(FLAGS.data_dir, "labels/")
-
+    # DGB
+    # data_dir = os.path.join(FLAGS.data_dir, "test-clean/")
+    # label_dir = os.path.join(FLAGS.data_dir, "labels/")
+    data_dir = os.path.join(FLAGS.data_dir, FLAGS.data_set + "/")
+    # Always use the test-clean data set and always use the same labels
+    label_dir = os.path.join(FLAGS.data_dir, "labels/test-clean/")
+    # end DGB
+    
     _, _, test = split_data(label_dir, split="0.7/0.15", random_seed=0)
     file_it = file_iter(data_dir, label_dir, files=test)
 
@@ -88,7 +101,10 @@ def main(_):
 
     # TensorFlow exported model
     speech_predictor = tf.contrib.predictor.from_saved_model(
-        export_dir=FLAGS.exported_model
+        # DGB
+        # export_dir=FLAGS.exported_model
+        export_dir=FLAGS.data_dir + "models/" + FLAGS.model_name + "/resnet1d/exported/"
+        # end DGB
     )
     init = tf.initializers.global_variables()
     classes = ["Noise", "Speech"]

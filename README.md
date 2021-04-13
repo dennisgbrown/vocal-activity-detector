@@ -24,9 +24,9 @@ The code performs 5 main functions:
 
     NOTE: This data lives in LibriSpeech/tfrecords/<data set name>
 
-3. Train using the tfrecords and write the raw model checkpoint data to disk.
+3. Train using the tfrecords and write the raw model shard data to disk.
 
-4. Export that checkpoint data to a saved model. 
+4. Export that shard data to a saved model. 
 
 5. Test the saved model on audio data. 
 
@@ -70,7 +70,7 @@ tfrecords
 
 8. I had to set my Windows registry to allow filenames longer than 260 chars. See https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation
 
-9. Command lines to run each step (run from vad folder) (I also put batch files in the scripts folder). **Generally you only want to change the "data_set" parameter to the name of a data folder under LibriSpeech**, plus in the testing step, you can change "model_name" to a different model than the one for the given data_set to implement the second part of our experiment.
+9. Command lines to run each step. Run from vad folder. Might need to add your repo home to PYTHONPATH. **Generally you only want to change the "data_set" parameter to the name of a data folder under LibriSpeech**, plus in the testing step, you can change "model_name" to a different model than the one for the given data_set to implement the second part of our experiment.
 
     - Step 1: Label: **We probably won't use this** and will just use the labels for test-clean as provided by the author.
 

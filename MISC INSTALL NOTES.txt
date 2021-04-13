@@ -74,3 +74,17 @@ After enabling that and restarting my command line, it's running and getting pas
 I got it to run a test on whatever it was testing. 
 
 
+--------------------------------------
+
+Nonsense for OSX:
+
+(1) Add the repo directory to PYTHONPATH
+export PYTHONPATH="/Users/<whatever>"
+
+(2) The "wrong" libsndfile is used, which doesn't process FLAC files. See https://github.com/bastibe/python-soundfile/issues/237 . Remove the "wrong" version as such:
+brew uninstall --ignore-dependencies libsndfile
+
+(3) Stupid-low open file limit breaks the data_to_tfrecords. 
+ulimit -n 2048
+
+(4) Had to use "The Unarchiver" to unzip the 11GB ZIP file of noisy data. Built-in macOS zip won't handle it.

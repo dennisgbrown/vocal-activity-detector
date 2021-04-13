@@ -143,14 +143,13 @@ cython_debug/
 # Misc
 .idea/
 
-# VAD: Ignore these directories
-pics/
-LibriSpeech/tfrecords
-LibriSpeech/labels
+# VAD: Ignore these directories except placeholders
+pics/*
+!pics/.placeholder
+LibriSpeech/tfrecords/*
+!LibriSpeech/tfrecords/.placeholder
+LibriSpeech/labels/*
+!LibriSpeech/labels/.placeholder
 LibriSpeech/test*
 LibriSpeech/train*
 
-# VAD: except for these placeholders
-!pics/.placeholder
-!LibriSpeech/tfrecords/.placeholder
-!LibriSpeech/labels/.placeholder

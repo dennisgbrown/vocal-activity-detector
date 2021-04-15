@@ -22,6 +22,9 @@ flags.DEFINE_string("data_set",
 flags.DEFINE_string("model_name",
                     "test-clean",
                     "name of exported model to use -- assumed to be in data_dir/models/model_name/resnet1d/exported")
+flags.DEFINE_string("results_dir",
+                    "../results/",
+                    "name of results directory")
 # flags.DEFINE_string(
 #     "exported_model",
 #     "/home/filippo/datasets/LibriSpeech/tfrecords/models/resnet1d/inference/exported/",
@@ -89,6 +92,10 @@ def main(_):
     data_dir = os.path.join(FLAGS.data_dir, FLAGS.data_set + "/")
     # Always use the test-clean data set and always use the same labels
     label_dir = os.path.join(FLAGS.data_dir, "labels/test-clean/")
+    results_fn = FLAGS.results_dir + "results_model_" + FLAGS.model_name \
+        + "_data_" + FLAGS.data_set + ".csv"
+    results_file = open(results_fn, "w")
+    results_file.write("signal_name, length, matches, checks, pc_accuracy\n")
     # end DGB
 
     _, _, test = split_data(label_dir, split="0.7/0.15", random_seed=0)
@@ -185,6 +192,9 @@ def main(_):
 
             # DGB
             print('Accuracy:', matches, '/', checks, '=', (matches/checks * 100.0), '%')
+            results_file.write(fn + "," + str(len(signal)) + "," + str(matches) + ","
+                               + str(checks) + "," + str(matches/checks * 100.0) + "\n")
+            results_file.flush()
             # end DGB
             print(
                 "Average prediction time = {:.2f} ms".format(np.mean(pred_time) * 1e3)
@@ -198,6 +208,10 @@ def main(_):
             # DGB
             # visualize_predictions(signal, fn, preds)
             # end DGB
+
+    # DGB
+    results_file.close()
+    # end DGB
 
 
 if __name__ == "__main__":

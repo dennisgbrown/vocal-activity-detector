@@ -1,3 +1,9 @@
+"""
+### Authors: Dennis Brown, Shannon McDade, Jacob Parmer
+###
+### Created: Mar 28, 2021
+"""
+
 import os
 from pydub import AudioSegment
 from pydub.generators import WhiteNoise

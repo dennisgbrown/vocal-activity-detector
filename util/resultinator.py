@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+### Authors: Dennis Brown, Shannon McDade, Jacob Parmer
+###
+### Created: April 15, 2021
+"""
 
 import csv
 

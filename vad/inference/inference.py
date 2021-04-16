@@ -93,9 +93,9 @@ def main(_):
     # Always use the test-clean data set and always use the same labels
     label_dir = os.path.join(FLAGS.data_dir, "labels/test-clean/")
     results_fn = FLAGS.results_dir + "results_model_" + FLAGS.model_name \
-        + "_data_" + FLAGS.data_set + ".csv"
+        + "_data_" + FLAGS.data_set + "_cm.csv"
     results_file = open(results_fn, "w")
-    results_file.write("signal_name, length, matches, checks, pc_accuracy\n")
+    results_file.write("signal_name, length, matches, checks, pc_accuracy, psas, psan, pnas, pnan\n")
     # end DGB
 
     _, _, test = split_data(label_dir, split="0.7/0.15", random_seed=0)
@@ -126,7 +126,11 @@ def main(_):
             # DGB
             # Create a vector the same length as the signal vector containing the
             # label data, where at each element, 0 = no speech and 1 = speech.
-            matches = 0
+            matches = 0 # classification = prediction
+            psas = 0 # predicted Speech, actual Speech
+            psan = 0 # predicted Speech, actual Noise
+            pnas = 0 # predicted Noise, actual Speech
+            pnan = 0 # predicted Noise, actual Noise
             checks = 0
             truths = np.zeros(len(signal))
             for label in labels:
@@ -175,6 +179,10 @@ def main(_):
                 truth_mean = truths[(pointer - FLAGS.seq_len):(pointer + FLAGS.stride)].mean()
                 truth_class = classes[int(np.round(truth_mean))]
                 matches += 1 if (truth_class == speech_pred) else 0
+                psas += 1 if ((speech_pred == 'Speech') and (truth_class == 'Speech')) else 0
+                psan += 1 if ((speech_pred == 'Speech') and (truth_class == 'Noise')) else 0
+                pnas += 1 if ((speech_pred == 'Noise') and (truth_class == 'Speech')) else 0
+                pnan += 1 if ((speech_pred == 'Noise') and (truth_class == 'Noise')) else 0
                 checks += 1
                 # print(truth_class)
                 # end DGB
@@ -191,9 +199,12 @@ def main(_):
                 pointer += FLAGS.seq_len + FLAGS.stride
 
             # DGB
-            print('Accuracy:', matches, '/', checks, '=', (matches/checks * 100.0), '%')
+            print('Accuracy:', matches, '/', checks, '=', (matches/checks * 100.0), '%',
+                  'psas', psas, 'psan', psan, 'pnas', pnas, 'pnan', pnan)
             results_file.write(fn + "," + str(len(signal)) + "," + str(matches) + ","
-                               + str(checks) + "," + str(matches/checks * 100.0) + "\n")
+                               + str(checks) + "," + str(matches/checks * 100.0) + ","
+                               + str(psas) + "," + str(psan) + ","
+                               + str(pnas) + "," + str(pnan) + "\n")
             results_file.flush()
             # end DGB
             print(

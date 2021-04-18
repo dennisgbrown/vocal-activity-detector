@@ -157,3 +157,5 @@ LibriSpeech/models/*
 LibriSpeech/test*
 LibriSpeech/train*
 
+results/tmpgbp_4m5m
+results/tmp86y739n8

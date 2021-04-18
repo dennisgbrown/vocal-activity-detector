@@ -1,4 +1,4 @@
-dataset\model,test-clean,test-clean-db-160,test-clean-db-80,test-clean-db-40,test-clean-db-20,test-clean-db-10,test-clean-db-5,test-clean-db0,test-clean-db5
+dataset\model,test-clean_acc,test-clean-db-160_acc,test-clean-db-80_acc,test-clean-db-40_acc,test-clean-db-20_acc,test-clean-db-10_acc,test-clean-db-5_acc,test-clean-db0_acc,test-clean-db5_acc
 test-clean, 97.36, 97.91, 97.67, 89.03, 78.58, 76.67, 55.20, 67.48, 77.70
 test-clean-db-160, 97.06, 97.88, 97.44, 88.88, 78.15, 75.70, 54.68, 68.40, 77.70
 test-clean-db-80, 96.98, 97.85, 97.49, 89.54, 78.98, 76.79, 54.55, 69.14, 77.70

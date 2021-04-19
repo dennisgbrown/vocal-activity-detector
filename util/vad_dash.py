@@ -21,6 +21,8 @@ import webbrowser
 # folder as the results
 results_path = sys.argv[0][:-11]
 
+results_path += '../results/'
+
 # Format of results filenames
 results_filename = 'results_model_test-clean'
 

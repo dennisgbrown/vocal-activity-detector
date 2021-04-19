@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-[add header]
+### Plot results in plotly dash.
+###
+### Authors: Dennis Brown, Shannon McDade, Jacob Parmer
+###
+### Created: April 15, 2021
+"""
 """
 import os
 import sys

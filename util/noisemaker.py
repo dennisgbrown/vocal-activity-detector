@@ -43,6 +43,7 @@ def dump_audio_stats_to_CSV(input_folder, output_file):
     dBFSs = []
 
     output = open(output_file, 'w')
+    output.write('filename,length,loudness\n')
 
     # Assume subfolder structure:
     # input_foldername / reader ID / chapter ID / FLAC audio files
@@ -64,6 +65,9 @@ def dump_audio_stats_to_CSV(input_folder, output_file):
                     outstring = filename + ',' + str(length) + ',' + str(loudness)
                     output.write(outstring + '\n')
                     print(outstring)
+    print('Average length (s):', sum(lengths) / len(lengths))
+    print('Average loudness:', sum(dBFSs) / len(dBFSs))
+
 
     output.close()
     return
@@ -74,7 +78,6 @@ def add_noise(sound, loudness):
     noise = set_loudness(noise, loudness)
     combined = sound.overlay(noise)
     return combined
-
 
 
 def make_noisy_files(input_folder, target_noise_loudnesses):
@@ -112,8 +115,8 @@ def make_noisy_files(input_folder, target_noise_loudnesses):
 
 
 def main():
-    input_folder = '../8BitBrainVADfg/LibriSpeech/test-clean'
-    # dump_audio_stats_to_CSV(input_folder, 'stats.csv')
+    input_folder = '../LibriSpeech/test-clean'
+    # dump_audio_stats_to_CSV(input_folder, '../results/audio-stats.csv')
     target_noise_loudnesses = [-160, -80, -40, -20, -10, -5, 0, 5]
     make_noisy_files(input_folder, target_noise_loudnesses)
 

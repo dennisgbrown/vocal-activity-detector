@@ -92,7 +92,14 @@ tfrecords
     
     python inference/inference.py --data_set test-clean --model_name test-clean --data_dir ../LibriSpeech/ --smoothing
 
-
+10. To run everything to reproduce the results in the Final Report: 
+```
+cd scripts
+./do_all_tfrecords.sh
+./do_all_training.sh
+./do_all_exports.sh
+./do_all_tests.sh
+```
 
 
 # ORIGINAL AUTHOR's README for Voice Activity Detection project

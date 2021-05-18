@@ -2,7 +2,9 @@
 
 ## What's going on here?
 
-We took Filippo Giruzzi's VAD from https://github.com/filippogiruzzi/voice_activity_detection and modified it to work on more than just one hard-coded data set. It uses TensorFlow and is based on tf.estimator. Our modifications to the source code are bracketed with "# initials" and # end initials".
+We (Dennis Brown, Shannon McDade, and Jacob Parmer) took Filippo Giruzzi's VAD from https://github.com/filippogiruzzi/voice_activity_detection and modified it to work on more than just one hard-coded data set. It uses TensorFlow and is based on tf.estimator. Our modifications to the source code are bracketed with "# initials" and # end initials".
+
+For more context please see the [project's final report](https://github.com/dennisgbrown/vocal-activity-detector/blob/main/Final_Project_Report__ML_Spring_2021_.pdf).
 
 We are only using the LibriSpeech "test-clean" data set from openslr, which is a set of FLAC audio files. It is split into 70% train, 15% validate, 15% test. 
 
